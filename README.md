@@ -1,1 +1,1 @@
-# cataloging_coherent_oscillators_kepler
+# cataloging_coherent_oscillators_kepler_tess_k2
