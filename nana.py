@@ -146,5 +146,5 @@ def refine_peaks(xs, ys, indices):
 
     """
     foo = lambda i: refine_peak(xs,ys,i)
-    xs_refined, ys_refined,second_derivatives = zip(*list(map,(foo,indices)))
+    xs_refined, ys_refined, second_derivatives = zip(*list(map(foo,indices)))
     return np.array(xs_refined), np.array(ys_refined), np.array(second_derivatives)
