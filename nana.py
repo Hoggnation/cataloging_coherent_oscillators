@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import find_peaks)
+from scipy.signal import find_peaks
 
 def get_started(num_of_peaks, xs, ys):
     """
@@ -128,7 +128,7 @@ def refine_peak(xs,ys,index):
     """
     b,m,q = fit_parabola(xs, ys, index)
     x_peak = -m / q
-    return x_peak, 0.5 * q * (x_peak) ** 2 + m * (x_peak) + b
+    return x_peak, 0.5 * q * (x_peak) ** 2 + m * (x_peak) + b,q
 
 def refine_peaks(xs, ys, indices):
     """
@@ -146,5 +146,5 @@ def refine_peaks(xs, ys, indices):
 
     """
     foo = lambda i: refine_peak(xs,ys,i)
-    xs_refined, ys_refined = zip(*list(map,(foo,indices)))
-    return np.array(xs_refined), np.array(ys_refined)
+    xs_refined, ys_refined,second_derivatives = zip(*list(map,(foo,indices)))
+    return np.array(xs_refined), np.array(ys_refined), np.array(second_derivatives)
