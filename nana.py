@@ -5,6 +5,25 @@ def helloworld():
     print("Hello world!")
 
 def get_started(num_of_peaks, xs, ys):
+    """
+    
+    Identifies and returns the indices of the highest peaks in a given dataset.
+    
+    Args:
+        num_of_peaks (int): The number of highest peaks to return.
+        xs (numpy.ndarray): The x-axis values 
+        ys (numpy.ndarray): The y-axis values
+
+    Returns:
+        numpy array: An array of indices corresponding to the highest peaks in `ys`.
+
+    Bugs:
+        `num_of_peaks` cannot be greater than the number of detected peaks
+        `xs` or `ys` must be NumPy array
+
+    
+    """
+
     indxs, properties = find_peaks(ys)
     return indxs[np.argsort(-ys[indxs])[:num_of_peaks]]
 
@@ -32,7 +51,5 @@ def refine_peak(xs,ys,index):
 
 def refine_peaks(xs, ys, indices):
     foo = lambda i: refine_peak(xs,ys,i)
-    return list(map(foo,indices))
-
-
-
+    xs_refined, ys_refined = zip(*list(map,(foo,indices)))
+    return np.array(xs_refined), np.array(ys_refined)
