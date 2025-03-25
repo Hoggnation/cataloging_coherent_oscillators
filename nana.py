@@ -148,3 +148,15 @@ def refine_peaks(xs, ys, indices):
     foo = lambda i: refine_peak(xs,ys,i)
     xs_refined, ys_refined, second_derivatives = zip(*list(map(foo,indices)))
     return np.array(xs_refined), np.array(ys_refined), np.array(second_derivatives)
+
+def get_vals_kep(starID):
+    search_result = lk.search_lightcurve(starID, mission='Kepler')
+    lc = search_result.download_all().stitch()
+    fmin = (1/(lc.time[-1] - lc.time[0])).value
+    pg_spacing_fmin = lc.to_periodogram(
+        method = 'lombscargle'
+        normalization = 'psd'
+        frequency = np.arange(fmin, (1 / (np.median(np.diff(lc.time)).value)),fmin)
+        )
+    return(np.array(pg_spacing_fmin.frequency.value)), ( np.array(pg_spacing_fmin.power.value))
+
