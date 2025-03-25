@@ -154,8 +154,8 @@ def get_vals_kep(starID):
     lc = search_result.download_all().stitch()
     fmin = (1/(lc.time[-1] - lc.time[0])).value
     pg_spacing_fmin = lc.to_periodogram(
-        method = 'lombscargle'
-        normalization = 'psd'
+        method = 'lombscargle',
+        normalization = 'psd',
         frequency = np.arange(fmin, (1 / (np.median(np.diff(lc.time)).value)),fmin)
         )
     return(np.array(pg_spacing_fmin.frequency.value)), ( np.array(pg_spacing_fmin.power.value))
