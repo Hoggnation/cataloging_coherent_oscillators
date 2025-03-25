@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.signal import find_peaks
-
+import lightkurve as lk
 def get_started(num_of_peaks, xs, ys):
     """
     
