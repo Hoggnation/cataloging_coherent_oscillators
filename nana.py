@@ -145,11 +145,10 @@ def refine_peaks(xs, ys, indices):
     return np.array(xs_refined), np.array(ys_refined), np.array(second_derivatives)
 
 
-def folding_freq(fs, ps, sampling_time, makeplots=False):
+def folding_freq(delta_f, fs, ps, sampling_time, makeplots=False):
     """
     ##bugs:
     - assumes fs are ordered
-    - global delta_f
     """
     fc_guess = 1. / sampling_time
     
@@ -161,7 +160,7 @@ def folding_freq(fs, ps, sampling_time, makeplots=False):
     small, tiny = 20 * delta_f, 0.25 * delta_f
     fc_candidates = np.arange(fc_guess - small, fc_guess + small, tiny)
     foos_c = np.array([np.nansum(psA * cs(fc - fsA)) for fc in fc_candidates])
-    fc_index = peak_indx(1,fc_candidates, foos_c)
+    fc_index = get_filtered_peaks(1,fc_candidates, foos_c)
     fc, _, _ = refine_peaks(fc_candidates, foos_c, fc_index)
     fc = fc[0]
     
@@ -172,16 +171,13 @@ def folding_freq(fs, ps, sampling_time, makeplots=False):
         plt.title(fc)
         plt.show()
 
-    
-    return fc
-
 def find_min_and_refine(xs,ys):
     indxs, properties = find_peaks(-ys)
     min_index =  indxs[np.argsort(ys[indxs])[:1]]
     refined_x, refined_y, second_derivative = refine_peaks(xs, ys, min_index)
     return refined_x[0], refined_y[0]
 
-def peak_indx(num_of_peaks, xs, ys): 
+def get_filtered_peaks(num_of_peaks, xs, ys): 
     '''
     ##bugs:
     - realizes on global variable f_avoid
@@ -225,7 +221,7 @@ def integral_chi_squared(om, ts, ys, ws, T):
     A = integral_design_matrix(ts, om, T)
     return np.sum(ws * (ys - weighted_least_squares(A, ys, ws))**2)
 
-def region_and_freq(indices, folding_freq, unrefined_freq, unrefined_power):
+def region_and_freq(indices, folding_freq, f_min, unrefined_freq, unrefined_power):
     
     regions, best_freqs, best_chi2s = [], [], []
 
@@ -333,7 +329,7 @@ def null_chi_squared(ts, ys, weights):
     null_chisq = np.sum(weights * (ys - a0) ** 2)
     return null_chisq
 
-def mask_vals(): 
+def mask_vals(lc): 
 
     t_clean = np.ma.filled(lc.time.value, np.nan)
     flux_clean = np.ma.filled(lc.flux.value, np.nan)
@@ -348,7 +344,7 @@ def mask_vals():
     
     return(t_fit, flux_fit,weight_fit)
 
-def pg_full():
+def pg_full(f_min, f_max, lc):
     
     frequency_grid_full = np.arange(f_min, f_max, f_min)/(u.day)
     
@@ -363,7 +359,7 @@ def pg_full():
 
     return(freq_full, power_full)
 
-def pg_mini():
+def pg_mini(f_min, f_max, lc):
 
     frequency_grid_mini = np.arange(f_min, f_max / 4, f_min) / (u.day)
     
