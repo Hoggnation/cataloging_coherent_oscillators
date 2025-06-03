@@ -170,6 +170,7 @@ def folding_freq(delta_f, fs, ps, sampling_time, makeplots=False):
         plt.axvline(fc, color = 'red', alpha = 0.5)
         plt.title(fc)
         plt.show()
+    return fc
 
 def find_min_and_refine(xs,ys):
     indxs, properties = find_peaks(-ys)
@@ -221,7 +222,7 @@ def integral_chi_squared(om, ts, ys, ws, T):
     A = integral_design_matrix(ts, om, T)
     return np.sum(ws * (ys - weighted_least_squares(A, ys, ws))**2)
 
-def region_and_freq(indices, folding_freq, f_min, unrefined_freq, unrefined_power):
+def region_and_freq(indices, folding_freq, f_min, unrefined_freq, unrefined_power, t_fit, flux_fit, weight_fit):
     
     regions, best_freqs, best_chi2s = [], [], []
 
