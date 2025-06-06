@@ -1,35 +1,14 @@
 from scipy.signal import find_peaks
-
 import lightkurve as lk
-
-
 import matplotlib.pyplot as plt
-
-
 import numpy as np
-
-
 from scipy.signal import find_peaks
-
-
 import scipy.signal
-
-
 from astropy import units as u
-
-
 from scipy.interpolate import CubicSpline
-
-
 from math import cos, sin, radians
 
-
-
-
-
 def star(kic_id):
-
-
     search_result = lk.search_lightcurve(kic_id, mission='Kepler')
 
 
@@ -1089,7 +1068,7 @@ def pg_mini(f_min, f_max, lc):
 
 
 
-    frequency_grid_mini = np.arange(f_min, f_max / 4, f_min) / (u.day)
+    frequency_grid_mini = np.arange(f_min, f_max / 3, f_min) / (u.day)
 
 
     
