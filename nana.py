@@ -6,26 +6,24 @@ from scipy.signal import find_peaks
 import scipy.signal
 from astropy import units as u
 from scipy.interpolate import CubicSpline
-from math import cos, sin, radians
 
 def star(kic_id):
-    search_result = lk.search_lightcurve(kic_id, mission='Kepler')
+    """
+    very conservative, only use long cadence data
+    """
 
-
+    search_result = lk.search_lightcurve(kic_id, mission='Kepler', exptime='long')
     lc_collection = search_result.download_all()
-
-
     lc = lc_collection.stitch()
-
+    if not  np.all(np.diff(lc.time.value) > 0):
+        print("times not in order")
+        assert False
 
     delta_f = (1/(lc.time[-1] - lc.time[0]).value) 
-
-
     sampling_time= np.median(np.diff(lc.time.value))
-
-
-
-
+    if not sampling_time > 0.01:
+        print("looks like short cadence") #days magic
+        assert False
 
     return (lc, delta_f, sampling_time)
 
